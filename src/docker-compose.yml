@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  testcontainerdemo.api:
+    image: ${DOCKER_REGISTRY-}testcontainerdemoapi
+    build:
+      context: .
+      dockerfile: TestContainerDemo.API/Dockerfile
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: sql-server
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: yourStrong(!)Password
+    mem_limit: 1g
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - mssql_extensibility:/var/opt/mssql-extensibility
+      - mssql_extensibilityData:/var/opt/mssql-extensibility/data
+      - mssql_extensibilityLog:/var/opt/mssql-extensibility/log
+
+volumes:
+  mssql_data:
+  mssql_extensibility:
+  mssql_extensibilityData:
+  mssql_extensibilityLog:
